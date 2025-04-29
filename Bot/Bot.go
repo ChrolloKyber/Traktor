@@ -84,6 +84,7 @@ var (
 
 			contentType := opts[0].StringValue()
 			query := opts[1].StringValue()
+
 			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
