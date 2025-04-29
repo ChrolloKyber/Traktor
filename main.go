@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/ChrolloKryber/Traktor/Bot"
-	"github.com/ChrolloKryber/Traktor/Trakt"
+	// "github.com/ChrolloKryber/Traktor/Trakt"
 	"github.com/joho/godotenv"
 )
 
@@ -13,6 +13,6 @@ func main() {
 	if err != nil {
 		fmt.Println("Error loading environment variables: ", err)
 	}
-	Trakt.AccessToken()
+	// Trakt.AccessToken()
 	Bot.Run()
 }
