@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"os/signal"
+	"strings"
 
 	"github.com/ChrolloKyber/Traktor/Trakt"
 	"github.com/bwmarrin/discordgo"
@@ -83,15 +84,15 @@ var (
 		"search": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			opts := i.ApplicationCommandData().Options
 
-			contentType := opts[0].StringValue()
+			contentType := strings.Title(opts[0].StringValue())
 			query := opts[1].StringValue()
 
 			data, err := Trakt.SearchContent(contentType, query)
 
 			var response string
-			if contentType == "movie" {
+			if contentType == "Movie" {
 				response = fmt.Sprintf("%s: %s\nYear: %d\nIMDB: https://imdb.com/title/%s\n", contentType, data.Movie.Title, data.Movie.Year, data.Movie.IDs.IMDB)
-			} else if contentType == "show" {
+			} else if contentType == "Show" {
 				response = fmt.Sprintf("%s: %s\nYear: %d\nIMDB: https://imdb.com/title/%s\n", contentType, data.Show.Title, data.Show.Year, data.Show.IDs.IMDB)
 			}
 
