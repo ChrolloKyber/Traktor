@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+
+	"github.com/joho/godotenv"
 )
 
 type SearchResult struct {
@@ -76,7 +79,11 @@ type List struct {
 	User User `json:"user"`
 }
 
-func SearchContent(contentType, query string) SearchResult {
+func SearchContent(contentType, query string) (SearchResult, error) {
+	err := godotenv.Load()
+	if err != nil {
+		fmt.Println("Error loading environment variable: ", err)
+	}
 	client := &http.Client{}
 
 	URL := fmt.Sprintf("https://api.trakt.tv/search/%s?query=%s&extended=images", contentType, query)
@@ -85,13 +92,13 @@ func SearchContent(contentType, query string) SearchResult {
 
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("trakt-api-version", "2")
-	req.Header.Add("trakt-api-key", "9ddb03b27e491a11ac4447bd5f37b1246e78f29e3df1e2ccd8ae1d802cbf466e")
+	req.Header.Add("trakt-api-key", os.Getenv("TRAKT_CLIENT_ID"))
 
 	resp, err := client.Do(req)
 
 	if err != nil {
 		fmt.Println("Errored when sending request to the server")
-		return SearchResult{}
+		return SearchResult{}, err
 	}
 
 	var results []SearchResult
@@ -99,8 +106,9 @@ func SearchContent(contentType, query string) SearchResult {
 	resp_body, _ := io.ReadAll(resp.Body)
 
 	err = json.Unmarshal(resp_body, &results)
+	if err != nil {
+		return SearchResult{}, err
+	}
 
-	fmt.Println(resp.Status)
-	fmt.Println(string(resp_body))
-	return results[0]
+	return results[0], nil
 }

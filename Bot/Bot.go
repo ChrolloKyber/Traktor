@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 
+	"github.com/ChrolloKyber/Traktor/Trakt"
 	"github.com/bwmarrin/discordgo"
 	"github.com/joho/godotenv"
 )
@@ -51,7 +52,7 @@ var (
 							Value: "movie",
 						},
 						{
-							Name:  "Series",
+							Name:  "Show",
 							Value: "show",
 						},
 						{
@@ -85,10 +86,23 @@ var (
 			contentType := opts[0].StringValue()
 			query := opts[1].StringValue()
 
+			data, err := Trakt.SearchContent(contentType, query)
+
+			var response string
+			if contentType == "movie" {
+				response = fmt.Sprintf("%s: %s\nYear:%d\nIMDB: https://imdb.com/title/%s\n", contentType, data.Movie.Title, data.Movie.Year, data.Movie.IDs.IMDB)
+			} else if contentType == "show" {
+				response = fmt.Sprintf("%s: %s\nYear:%d\nIMDB: https://imdb.com/title/%s\n", contentType, data.Show.Title, data.Show.Year, data.Show.IDs.IMDB)
+			}
+
+			if err != nil {
+				response = fmt.Sprintf("Error returned by the search function: %v", err)
+			}
+
 			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
 				Type: discordgo.InteractionResponseChannelMessageWithSource,
 				Data: &discordgo.InteractionResponseData{
-					Content: fmt.Sprintf("Content Type: %s\nQuery: %s\n", contentType, query),
+					Content: response,
 				},
 			})
 		},
