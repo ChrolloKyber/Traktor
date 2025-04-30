@@ -1,4 +1,4 @@
-module github.com/ChrolloKryber/Traktor
+module github.com/ChrolloKyber/Traktor
 
 go 1.24.2
 
