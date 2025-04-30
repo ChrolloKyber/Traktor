@@ -90,9 +90,9 @@ var (
 
 			var response string
 			if contentType == "movie" {
-				response = fmt.Sprintf("%s: %s\nYear:%d\nIMDB: https://imdb.com/title/%s\n", contentType, data.Movie.Title, data.Movie.Year, data.Movie.IDs.IMDB)
+				response = fmt.Sprintf("%s: %s\nYear: %d\nIMDB: https://imdb.com/title/%s\n", contentType, data.Movie.Title, data.Movie.Year, data.Movie.IDs.IMDB)
 			} else if contentType == "show" {
-				response = fmt.Sprintf("%s: %s\nYear:%d\nIMDB: https://imdb.com/title/%s\n", contentType, data.Show.Title, data.Show.Year, data.Show.IDs.IMDB)
+				response = fmt.Sprintf("%s: %s\nYear: %d\nIMDB: https://imdb.com/title/%s\n", contentType, data.Show.Title, data.Show.Year, data.Show.IDs.IMDB)
 			}
 
 			if err != nil {
