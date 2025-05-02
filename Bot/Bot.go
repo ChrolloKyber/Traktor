@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	GuildID        = flag.String("guild", "1365970657665482782", "Test guild ID. If not passed - bot registers commands globally")
+	GuildID        = flag.String("guild", "", "Test guild ID. If not passed - bot registers commands globally")
 	RemoveCommands = flag.Bool("rmcmd", true, "Remove all commands after shutdowning or not")
 )
 
@@ -89,6 +89,9 @@ var (
 
 			data, err := Trakt.SearchContent(contentType, query)
 
+			if err != nil {
+				fmt.Println("Error searching content: ", err)
+			}
 			var response string
 			if contentType == "Movie" {
 				response = fmt.Sprintf("%s: %s\nYear: %d\nIMDB: https://imdb.com/title/%s\n", contentType, data.Movie.Title, data.Movie.Year, data.Movie.IDs.IMDB)

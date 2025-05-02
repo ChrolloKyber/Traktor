@@ -2,10 +2,8 @@ package main
 
 import (
 	"fmt"
-	// "reflect"
 
 	"github.com/ChrolloKyber/Traktor/Bot"
-	// "github.com/ChrolloKyber/Traktor/Trakt"
 	"github.com/joho/godotenv"
 )
 
