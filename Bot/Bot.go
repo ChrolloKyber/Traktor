@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	GuildID        = flag.String("guild", "", "Test guild ID. If not passed - bot registers commands globally")
+	GuildID        = flag.String("guild", "1365970657665482782", "Test guild ID. If not passed - bot registers commands globally")
 	RemoveCommands = flag.Bool("rmcmd", true, "Remove all commands after shutdowning or not")
 )
 
@@ -84,7 +84,7 @@ var (
 		"search": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
 			opts := i.ApplicationCommandData().Options
 
-			contentType := strings.Title(opts[0].StringValue())
+			contentType := opts[0].StringValue()
 			query := opts[1].StringValue()
 
 			data, err := Trakt.SearchContent(contentType, query)
@@ -92,11 +92,18 @@ var (
 			if err != nil {
 				fmt.Println("Error searching content: ", err)
 			}
+
 			var response string
-			if contentType == "Movie" {
-				response = fmt.Sprintf("%s: %s\nYear: %d\nIMDB: https://imdb.com/title/%s\n", contentType, data.Movie.Title, data.Movie.Year, data.Movie.IDs.IMDB)
-			} else if contentType == "Show" {
-				response = fmt.Sprintf("%s: %s\nYear: %d\nIMDB: https://imdb.com/title/%s\n", contentType, data.Show.Title, data.Show.Year, data.Show.IDs.IMDB)
+			if contentType == "movie" {
+				response = fmt.Sprintf("%s: %s\nYear: %d\nIMDB: https://imdb.com/title/%s\n", strings.Title(contentType), data.Movie.Title, data.Movie.Year, data.Movie.IDs.IMDB)
+			} else if contentType == "show" {
+				response = fmt.Sprintf("%s: %s\nYear: %d\nIMDB: https://imdb.com/title/%s\n", strings.Title(contentType), data.Show.Title, data.Show.Year, data.Show.IDs.IMDB)
+			} else if contentType == "person" {
+				response = fmt.Sprintf("Name: %s\nIMDB: https://trakt.tv/people/%s\n", data.Person.Name, data.Person.IDs.Slug)
+			} else if contentType == "list" {
+				response = fmt.Sprintf("List: %s\nCreated by: [%s](https://trakt.tv/users/%s)\nTrakt Link: %s\n", data.List.Name, data.List.User.Name, data.List.User.IDs.Slug, data.List.ShareLink)
+			} else if contentType == "episode" {
+				response = fmt.Sprintf("Episode title: %s\nShow: %s (Season: %d, Episode: %d)\nLink: https://trakt.tv/shows/%s/seasons/%d/episodes/%d\n", data.Episode.Title, data.Show.Title, data.Episode.Season, data.Episode.Number, data.Show.IDs.Slug, data.Episode.Season, data.Episode.Number)
 			}
 
 			if err != nil {

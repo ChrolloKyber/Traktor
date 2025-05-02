@@ -37,7 +37,6 @@ type Episode struct {
 	Number int    `json:"number"`
 	Title  string `json:"title"`
 	IDs    IDs    `json:"ids"`
-	Show   *Show  `json:"show,omitempty"`
 }
 
 type Person struct {
@@ -86,7 +85,7 @@ func SearchContent(contentType, query string) (SearchResult, error) {
 	}
 	client := &http.Client{}
 
-	URL := fmt.Sprintf("https://api.trakt.tv/search/%s?query=%s&extended=images", contentType, query)
+	URL := fmt.Sprintf("https://api.trakt.tv/search/%s?query=%s", contentType, query)
 
 	req, _ := http.NewRequest("GET", URL, nil)
 
