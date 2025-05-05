@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 
+	// "github.com/ChrolloKyber/Traktor/Bot"
+
 	"github.com/ChrolloKyber/Traktor/Bot"
 	"github.com/joho/godotenv"
 )

@@ -78,6 +78,10 @@ var (
 				},
 			},
 		},
+		{
+			Name:        "login",
+			Description: "Login to your Trakt account, for extra features",
+		},
 	}
 
 	commandHandlers = map[string]func(s *discordgo.Session, i *discordgo.InteractionCreate){
@@ -116,6 +120,21 @@ var (
 					Content: response,
 				},
 			})
+		},
+		"login": func(s *discordgo.Session, i *discordgo.InteractionCreate) {
+			deviceCode := Trakt.DeviceCode()
+			fmt.Println("Device Code: ", deviceCode.DeviceCode)
+			fmt.Println("User Code: ", deviceCode.UserCode)
+			fmt.Println("Link: ", deviceCode.VerificationURL)
+			// content :=
+
+			s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+				Type: discordgo.InteractionResponseChannelMessageWithSource,
+				Data: &discordgo.InteractionResponseData{
+					Content: deviceCode.UserCode,
+				},
+			})
+
 		},
 	}
 )

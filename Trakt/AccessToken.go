@@ -21,8 +21,8 @@ func AccessToken() AccessTokens {
 	err := godotenv.Load()
 	client := &http.Client{}
 
-	clientID := os.Getenv("CLIENT_ID")
-	clientSecret := os.Getenv("CLIENT_SECRET")
+	clientID := os.Getenv("TRAKT_CLIENT_ID")
+	clientSecret := os.Getenv("TRAKT_CLIENT_SECRET")
 
 	bodyStruct := struct {
 		Code         string `json:"code"`

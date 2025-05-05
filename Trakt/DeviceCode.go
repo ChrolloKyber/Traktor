@@ -6,8 +6,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os/exec"
-	"runtime"
+	"os"
 )
 
 type DeviceCodes struct {
@@ -18,8 +17,22 @@ type DeviceCodes struct {
 
 func DeviceCode() DeviceCodes {
 	client := &http.Client{}
+	clientID := os.Getenv("TRAKT_CLIENT_ID")
 
-	body := []byte("{\n  \"client_id\": \"9ddb03b27e491a11ac4447bd5f37b1246e78f29e3df1e2ccd8ae1d802cbf466e\"\n}")
+	bodyStruct := struct {
+		ClientID string `json:"client_id"`
+	}{
+		ClientID: clientID,
+	}
+
+	bodyBytes, err := json.Marshal(bodyStruct)
+
+	if err != nil {
+		fmt.Println("Error marshalling JSON")
+		fmt.Println(err)
+	}
+
+	body := []byte(bodyBytes)
 
 	req, _ := http.NewRequest("POST", "https://api.trakt.tv/oauth/device/code", bytes.NewBuffer(body))
 
@@ -42,23 +55,6 @@ func DeviceCode() DeviceCodes {
 	}
 
 	fmt.Printf("Opening the default web browser, please input the code: %s\n", deviceCode.UserCode)
-	URL := deviceCode.VerificationURL
-
-	switch runtime.GOOS {
-	case "linux":
-		err = exec.Command("xdg-open", URL).Start()
-	case "windows":
-		err = exec.Command("rundll32", "url.dll,FileProtocolHandler", URL).Start()
-	case "darwin":
-		err = exec.Command("open", URL).Start()
-	default:
-		err = fmt.Errorf("unsupported platform")
-	}
-
-	if err != nil {
-		fmt.Println("Error while opening the URL")
-		fmt.Println(err)
-	}
 
 	return deviceCode
 }
